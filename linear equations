@@ -1,0 +1,64 @@
+Напишите программу, которая будет решать систему линейных уравнений вида:
+
+\begin{matrix} a_{11}x+a_{12}y=b_{1}&(1) \\ a_{21}x+a_{22}y=b_{2} &(2) \end{matrix}	
+* На вход программа должна принимать 2 строки (т.е. должен быть реализован ввод с клавиатуры). Каждая строка содержит 3 действительных числа через пробел: коэффициенты a и b.
+* Систему уравнений необходимо решить "матричным" способом. Предусмотрите случаи, когда решения есть, решений нет, решений бесконечно много. Выведите ответ. Покажите решение на графике. Если решения есть, постройте график и точкой отметьте решение (если оно одно, например, функцией [`scatter`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html)). ГРАФИК СТРОИТСЯ ВО ВСЕХ ТРЕХ РАССМАТРИВАЕМЫХ СЛУЧАЯХ.
+
+from matplotlib import pyplot as plt
+import numpy as np
+
+s = str(input("First: "))
+s2 = str(input("Second: "))
+
+A = np.array([[int(s.split()[0]), int(s.split()[1])],
+                  [int(s2.split()[0]), int(s2.split()[1])]])
+B = np.array([[int(s.split()[2]), int(s.split()[1])],
+                  [int(s2.split()[2]), int(s2.split()[1])]])
+C = np.array([[int(s.split()[0]), int(s.split()[2])],
+                  [int(s2.split()[0]), int(s2.split()[2])]])
+D = np.array([[int(s.split()[2])],
+                  [int(s2.split()[2])]])
+
+d_A = np.linalg.det(A)
+d_B = np.linalg.det(B)
+d_C = np.linalg.det(C)
+#print(d_B)
+
+print("\n")
+if (d_A != 0):
+  x = d_B / d_A
+  y = d_C / d_A
+  x = int(x * 100) / 100
+  y = int(y * 100) / 100
+  plt.title("График -_-")
+  plt.xlabel("X")
+  plt.ylabel("Y")
+  print("One solution: (", x, ", ", y, ")")
+  x1 = np.arange(-10, 10.01, 0.01)
+  a = [((D[0] / A[0, 1]) - (A[0, 0] / A[0, 1])*i) for i in x1]
+  b = [((D[1] / A[1, 1]) - (A[1, 0] / A[1, 1])*j) for j in x1]
+  plt.plot(x1, a, label="$y = \\frac{b_1}{a_{12}} - \\frac{a_{11}}{a_{12}}x$", color='black')
+  plt.plot(x1, b, label="$y = \\frac{b_2}{a_{22}} - \\frac{a_{21}}{a_{22}}x$", color='red')
+  plt.scatter(x,y)
+  plt.legend()
+
+if ((d_A == 0) & ((d_B != 0) | (d_C != 0))):
+  plt.title("График -_-")
+  plt.xlabel("X")
+  plt.ylabel("Y")
+  print("none")
+  a = [((D[0] / A[0, 1]) - (A[0, 0] / A[0, 1])*i) for i in range(-99,99)]
+  b = [((D[1] / A[1, 1]) - (A[1, 0] / A[1, 1])*j) for j in range(-99,99)]
+  plt.plot(range(-99,99), a, label="$y = \\frac{b_1}{a_{12}} - \\frac{a_{11}}{a_{12}}range(-99,99)$", color='black')
+  plt.plot(range(-99,99), b, label="$y = \\frac{b_2}{a_{22}} - \\frac{a_{21}}{a_{22}}range(-99,99)$", color='red')
+  plt.legend()
+  
+if ((d_A == 0) & (d_B == 0) & (d_C == 0)): 
+  plt.title("График -_-")
+  plt.xlabel("X")
+  plt.ylabel("Y")
+  print("lots of solutions")
+  x1 = list(range(-10,10))
+  y1 = [((D[0] / A[0, 1]) - (A[0, 0] / A[0, 1])*i) for i in x1]
+  plt.plot(x1, y1, label="$y = \\frac{b_1}{a_{12}} - \\frac{a_{11}}{a_{12}}x$", color='red')
+  plt.legend()
